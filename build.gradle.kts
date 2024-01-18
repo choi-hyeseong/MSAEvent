@@ -7,6 +7,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4"
     kotlin("jvm") version "1.9.21"
     kotlin("plugin.spring") version "1.9.21"
+    kotlin("plugin.jpa") version "1.9.22"
 }
 
 allprojects {
@@ -28,6 +29,7 @@ subprojects {
         plugin("kotlin")
         plugin("kotlin-kapt")
         plugin("java")
+        plugin("kotlin-jpa")
     }
 
     java {
@@ -49,6 +51,8 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.springframework.boot:spring-boot-starter")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+        runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0-RC2")
     }
 
 }
