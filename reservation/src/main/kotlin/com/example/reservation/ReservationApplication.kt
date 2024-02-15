@@ -1,4 +1,4 @@
-package com.example.event
+package com.example.reservation
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -8,8 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 @EnableDiscoveryClient
 @EnableFeignClients
 @SpringBootApplication
-class EventApplication
+class ReservationApplication
 
 fun main(args: Array<String>) {
-    runApplication<EventApplication>(*args)
+    runApplication<ReservationApplication>(*args)
 }

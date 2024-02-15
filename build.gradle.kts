@@ -53,6 +53,7 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
         runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0-RC2")
+        implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     }
 
 }

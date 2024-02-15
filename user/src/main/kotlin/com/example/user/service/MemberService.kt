@@ -36,5 +36,8 @@ class MemberService(
         return MemberResponseDTO(findEntityById(id))
     }
 
+    @Transactional
+    suspend fun existById(id : Long) : Boolean = memberRepository.existsById(id)
+
 
 }

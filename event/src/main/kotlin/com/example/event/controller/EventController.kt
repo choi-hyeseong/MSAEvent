@@ -2,6 +2,7 @@ package com.example.event.controller
 
 import com.example.event.dto.EventRequestDTO
 import com.example.event.dto.EventResponseDTO
+import com.example.event.dto.SeatDTO
 import com.example.event.service.EventService
 import com.example.response.Response
 import org.springframework.stereotype.Controller
@@ -32,6 +33,17 @@ class EventController(
     @GetMapping("/{id}")
     suspend fun getEventInfo(@PathVariable id : Long) : Response<EventResponseDTO> {
         return Response.of(true, null, eventService.findEvent(id))
+    }
+
+    @PostMapping("/exist")
+    suspend fun existSeat(@RequestBody seatDTO: SeatDTO) : Boolean {
+        return eventService.existSeat(seatDTO)
+    }
+
+
+    @PostMapping("/occupy")
+    suspend fun occupySeat(@RequestBody seatDTO: SeatDTO) : Boolean {
+        return eventService.occupySeat(seatDTO)
     }
 
 }
