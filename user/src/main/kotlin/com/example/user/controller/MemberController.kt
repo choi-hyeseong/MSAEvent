@@ -1,8 +1,8 @@
 package com.example.user.controller
 
+import com.example.response.Response
 import com.example.user.dto.MemberRequestDTO
 import com.example.user.dto.MemberResponseDTO
-import com.example.user.response.Response
 import com.example.user.service.MemberService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
