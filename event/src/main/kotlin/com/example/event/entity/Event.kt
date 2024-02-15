@@ -21,6 +21,6 @@ class Event(
     val status : Status,
 
 ) {
-    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val seats : MutableList<Seat> = mutableListOf()
 }

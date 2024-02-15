@@ -1,6 +1,7 @@
 package com.example.reservation.component.client.event
 
 import com.example.reservation.component.client.event.dto.SeatDTO
+import com.example.reservation.component.client.event.dto.SeatStatus
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody
 @FeignClient(name = "EVENT-API")
 interface EventAPIClient {
 
-    @PostMapping("/api/event/exist")
-    fun checkSeat(@RequestBody seatDTO: SeatDTO) : Boolean
+    @PostMapping("/api/event/check")
+    fun checkSeat(@RequestBody seatDTO: SeatDTO) : SeatStatus?
 
     @PostMapping("/api/event/occupy")
     fun occupySeat(@RequestBody seatDTO: SeatDTO) : Boolean
