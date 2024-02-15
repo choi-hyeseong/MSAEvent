@@ -1,7 +1,7 @@
 package com.example.user.handler
 
+import com.example.response.Response
 import com.example.user.exception.MemberException
-import com.example.user.response.Response
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice

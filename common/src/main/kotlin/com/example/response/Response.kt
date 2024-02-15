@@ -1,4 +1,4 @@
-package com.example.user.response
+package com.example.response
 
 import com.fasterxml.jackson.annotation.JsonInclude
 
