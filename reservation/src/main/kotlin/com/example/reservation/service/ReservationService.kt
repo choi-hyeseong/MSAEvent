@@ -10,6 +10,7 @@ import com.example.reservation.dto.toResponseDTO
 import com.example.reservation.entity.Reservation
 import com.example.reservation.exception.ReservationException
 import com.example.reservation.repository.ReservationRepository
+import com.example.response.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
@@ -23,21 +24,19 @@ class ReservationService(
     ) {
 
     @Transactional
-    suspend fun reserve(requestDTO: ReservationRequestDTO) : ReservationResponseDTO {
+    suspend fun reserve(requestDTO: ReservationRequestDTO) : Response<ReservationResponseDTO> {
         val reservation = requestDTO.toEntity()
         // IO 디스패처 실행
-        withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             if (!userAPIClient.check(reservation.userId))
                 throw ReservationException("존재하지 않는 유저입니다.", reservation.userId)
-
-            val seatDTO = SeatDTO(reservation.eventId, reservation.seatId)
-            // check랑 request 합치기.
-            val responseOccupy = eventAPIClient.occupySeat(seatDTO)
+            // check랑 request 동시 호출
+            val responseOccupy = eventAPIClient.occupySeat(SeatDTO(reservation.eventId, reservation.seatId))
             if (!responseOccupy.success)
-                throw ReservationException(responseOccupy.message ?: "", reservation.seatId)
+                throw ReservationException(responseOccupy.message ?: "예약 API가 응답하지 않습니다.", reservation.seatId)
+            else
+                Response.of(true, responseOccupy.message, reservationRepository.save(reservation).toResponseDTO())
         }
-
-        return reservationRepository.save(reservation).toResponseDTO()
     }
 
 }

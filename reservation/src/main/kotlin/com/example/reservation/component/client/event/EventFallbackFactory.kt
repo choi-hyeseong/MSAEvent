@@ -22,6 +22,7 @@ class EventFallbackFactory(val objectMapper: ObjectMapper) : FallbackFactory<Eve
         return EventFallback()
     }
 
+    // Response<T> 형식으로 예외가 발생한경우 메시지 반환.
     private fun deserialize(cause: Throwable?) : String? {
         if (cause !is FeignException)
             return null

@@ -24,6 +24,6 @@ class ReservationController(
 
     @PostMapping
     suspend fun createReservation(@RequestBody reservationRequestDTO: ReservationRequestDTO) : Response<ReservationResponseDTO> {
-        return Response.of(true, "예약에 성공하였습니다.", reservationService.reserve(reservationRequestDTO))
+        return reservationService.reserve(reservationRequestDTO)
     }
 }
