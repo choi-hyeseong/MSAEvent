@@ -26,7 +26,7 @@ abstract class AbstractFallbackFactory<T>(private val objectMapper: ObjectMapper
 
         val response = cause.responseBody().getOrNull() ?: return null
         val deserializeResponse = kotlin.runCatching {
-            objectMapper.readValue(response.array().toString(), object : TypeReference<Response<Nothing>>() {})
+            objectMapper.readValue(String(response.array()), object : TypeReference<Response<Nothing>>() {})
         }.getOrNull()
         return deserializeResponse?.message
     }
