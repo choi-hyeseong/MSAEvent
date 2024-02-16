@@ -1,7 +1,6 @@
 package com.example.reservation.component.client.event
 
 import com.example.reservation.component.client.event.dto.SeatDTO
-import com.example.reservation.component.client.event.dto.SeatStatus
 import com.example.response.Response
 import feign.FeignException
 import org.springframework.cloud.openfeign.FallbackFactory
