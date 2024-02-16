@@ -1,6 +1,5 @@
 package com.example.reservation.component.client
 
-import com.example.reservation.component.client.event.EventFallback
 import com.example.reservation.exception.ReservationException
 import com.example.response.Response
 import com.fasterxml.jackson.core.type.TypeReference

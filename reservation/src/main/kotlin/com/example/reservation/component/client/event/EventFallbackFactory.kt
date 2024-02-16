@@ -14,16 +14,17 @@ import java.io.ByteArrayInputStream
 import kotlin.jvm.optionals.getOrNull
 
 @Component
-class EventFallbackFactory(objectMapper: ObjectMapper) : AbstractFallbackFactory<EventFallback>(objectMapper) {
+class EventFallbackFactory(objectMapper: ObjectMapper) : AbstractFallbackFactory<EventFallbackFactory.EventFallback>(objectMapper) {
     override fun provideFallback(): EventFallback {
         return EventFallback()
     }
-}
 
-class EventFallback : EventAPIClient {
+    inner class EventFallback : EventAPIClient {
 
-    override fun occupySeat(seatDTO: SeatDTO): Response<SeatDTO> {
-        return Response.of(false, "좌석 정보 API서버가 응답하지 않습니다.", null)
+        override fun occupySeat(seatDTO: SeatDTO): Response<SeatDTO> {
+            return Response.of(false, "좌석 정보 API서버가 응답하지 않습니다.", null)
+        }
+
     }
-
 }
+

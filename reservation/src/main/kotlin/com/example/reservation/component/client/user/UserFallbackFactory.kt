@@ -6,15 +6,16 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Component
 
 @Component
-class UserFallbackFactory(objectMapper: ObjectMapper) : AbstractFallbackFactory<UserFallback>(objectMapper) {
+class UserFallbackFactory(objectMapper: ObjectMapper) : AbstractFallbackFactory<UserFallbackFactory.UserFallback>(objectMapper) {
     override fun provideFallback(): UserFallback {
        return UserFallback()
     }
-}
 
-class UserFallback : UserAPIClient {
-    override fun check(id: Long): Response<Nothing> {
-        return Response.of(false, "유저 API가 응답하지 않습니다.", null)
+    inner class UserFallback : UserAPIClient {
+        override fun check(id: Long): Response<Nothing> {
+            return Response.of(false, "유저 API가 응답하지 않습니다.", null)
+        }
+
     }
-
 }
+
