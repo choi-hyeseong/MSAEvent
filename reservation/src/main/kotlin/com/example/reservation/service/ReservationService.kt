@@ -2,7 +2,6 @@ package com.example.reservation.service
 
 import com.example.reservation.component.client.event.EventAPIClient
 import com.example.reservation.component.client.event.dto.SeatDTO
-import com.example.reservation.component.client.event.dto.SeatStatus
 import com.example.reservation.component.client.user.UserAPIClient
 import com.example.reservation.dto.ReservationRequestDTO
 import com.example.reservation.dto.ReservationResponseDTO
@@ -29,7 +28,7 @@ class ReservationService(
         return withContext(Dispatchers.IO) {
             val userResponse = userAPIClient.check(reservation.userId)
             if (!userResponse.success)
-                throw ReservationException(userResponse.message ?: "유저 API가 응답하지 않습니다.", null)
+                throw ReservationException(userResponse.message ?: "유저가 존재하지 않습니다.", null)
             // check랑 request 동시 호출
             val responseOccupy = eventAPIClient.occupySeat(SeatDTO(reservation.eventId, reservation.seatId))
             if (!responseOccupy.success)
