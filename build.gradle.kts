@@ -56,7 +56,7 @@ subprojects {
         implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
         // https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
-
+        implementation ("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
     }
 
 }

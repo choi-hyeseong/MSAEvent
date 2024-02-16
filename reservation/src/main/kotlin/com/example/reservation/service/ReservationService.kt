@@ -31,20 +31,13 @@ class ReservationService(
                 throw ReservationException("존재하지 않는 유저입니다.", reservation.userId)
 
             val seatDTO = SeatDTO(reservation.eventId, reservation.seatId)
-            resolveStatus(eventAPIClient.checkSeat(seatDTO), reservation)
-            if (!eventAPIClient.occupySeat(seatDTO))
-                throw ReservationException("예약에 실패했습니다. 다시 시도해주세요.", reservation.seatId)
+            // check랑 request 합치기.
+            val responseOccupy = eventAPIClient.occupySeat(seatDTO)
+            if (!responseOccupy.success)
+                throw ReservationException(responseOccupy.message ?: "", reservation.seatId)
         }
 
         return reservationRepository.save(reservation).toResponseDTO()
     }
 
-    private fun resolveStatus(status: SeatStatus?, reservation: Reservation) {
-        when (status) {
-            null -> throw ReservationException("존재하지 않는 좌석 정보입니다.", reservation.seatId)
-            SeatStatus.CLOSE ->  throw ReservationException("이미 예약된 좌석입니다.", reservation.seatId)
-            SeatStatus.DELETE -> throw ReservationException("예약할 수 없는 좌석입니다.", reservation.seatId)
-            else -> {}
-        }
-    }
 }

@@ -9,6 +9,7 @@ import com.example.event.exception.EventException
 import com.example.event.repository.EventRepository
 import com.example.event.repository.SeatRepository
 import com.example.event.type.Status
+import com.example.response.Response
 import com.example.response.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -52,16 +53,17 @@ class EventService(
         return seatRepository.findByEventIdAndId(eventId, seatId).getOrNull()
     }
 
-    //좌석이 비어있는지까지 확인
     @Transactional
-    suspend fun findSeatStatus(eventId : Long, seatId : Long) : Status? {
-        return findSeatWithEventId(eventId, seatId)?.status
-    }
+    suspend fun occupySeat(seatDTO: SeatDTO) : SeatDTO {
+        val seat = findSeatWithEventId(seatDTO.eventId, seatDTO.seatId)
+        if (seat == null)
+            throw EventException("존재하지 않는 좌석 정보 입니다. id : ${seatDTO.seatId}", null)
+        if (seat.status != Status.OPEN)
+            throw EventException("예약할 수 없는 좌석입니다. id : ${seat.id}", null)
 
-    suspend fun occupySeat(eventId: Long, seatId: Long) : Boolean {
-        val seatSaveDTO = SeatSaveDTO(eventId, seatId, Status.CLOSE) //Event와 유사한 DTO
+        val seatSaveDTO = SeatSaveDTO(seatDTO.eventId, seatDTO.seatId, Status.CLOSE) //Event와 유사한 DTO
         kafkaProducer.sendOccupyRequest(seatSaveDTO)
-        return true
+        return seatDTO //delete boolean (check랑 통합)
     }
 
     @Transactional

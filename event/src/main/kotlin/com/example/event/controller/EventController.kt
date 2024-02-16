@@ -36,15 +36,9 @@ class EventController(
         return Response.of(true, null, eventService.findEvent(id))
     }
 
-    @PostMapping("/check")
-    suspend fun checkSeat(@RequestBody seatDTO: SeatDTO) : Status? {
-        return eventService.findSeatStatus(seatDTO.eventId, seatDTO.seatId)
-    }
-
-
     @PostMapping("/occupy")
-    suspend fun occupySeat(@RequestBody seatDTO: SeatDTO) : Boolean {
-        return eventService.occupySeat(seatDTO.eventId, seatDTO.seatId)
+    suspend fun occupySeat(@RequestBody seatDTO: SeatDTO) : Response<SeatDTO> {
+        return Response.of(true, "좌석 예약에 성공하였습니다.", eventService.occupySeat(seatDTO))
     }
 
 }
