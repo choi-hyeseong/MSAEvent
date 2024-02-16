@@ -28,8 +28,9 @@ class ReservationService(
         val reservation = requestDTO.toEntity()
         // IO 디스패처 실행
         return withContext(Dispatchers.IO) {
-            if (!userAPIClient.check(reservation.userId))
-                throw ReservationException("존재하지 않는 유저입니다.", reservation.userId)
+            val userResponse = userAPIClient.check(reservation.userId)
+            if (!userResponse.success)
+                throw ReservationException(userResponse.message ?: "유저 API가 응답하지 않습니다.", null)
             // check랑 request 동시 호출
             val responseOccupy = eventAPIClient.occupySeat(SeatDTO(reservation.eventId, reservation.seatId))
             if (!responseOccupy.success)
