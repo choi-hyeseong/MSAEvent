@@ -24,6 +24,11 @@ class ReservationController(
 
     @PostMapping
     suspend fun createReservation(@RequestBody reservationRequestDTO: ReservationRequestDTO) : Response<ReservationResponseDTO> {
-        return reservationService.reserve(reservationRequestDTO)
+        val response = reservationService.reserve(reservationRequestDTO)
+        return if (response.success)
+            Response.of(true, response.message, reservationService.saveReservation(reservationRequestDTO)) //transaction 분리
+        else
+            Response.of(false, response.message, null)
+
     }
 }

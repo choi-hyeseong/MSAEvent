@@ -13,7 +13,7 @@ class UserFallbackFactory(objectMapper: ObjectMapper) : AbstractFallbackFactory<
 }
 
 class UserFallback : UserAPIClient {
-    override fun check(id: Long): Response<Boolean> {
+    override fun check(id: Long): Response<Nothing> {
         return Response.of(false, "유저 API가 응답하지 않습니다.", null)
     }
 

@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.PathVariable
 interface UserAPIClient {
 
     @GetMapping("/api/user/exist/{id}")
-    fun check(@PathVariable id : Long) : Response<Boolean>
+    fun check(@PathVariable id : Long) : Response<Nothing>
 }

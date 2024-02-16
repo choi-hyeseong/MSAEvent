@@ -23,8 +23,7 @@ class ReservationService(
     private val userAPIClient: UserAPIClient,
     ) {
 
-    @Transactional
-    suspend fun reserve(requestDTO: ReservationRequestDTO) : Response<ReservationResponseDTO> {
+    suspend fun reserve(requestDTO: ReservationRequestDTO) : Response<Nothing> {
         val reservation = requestDTO.toEntity()
         // IO 디스패처 실행
         return withContext(Dispatchers.IO) {
@@ -36,8 +35,13 @@ class ReservationService(
             if (!responseOccupy.success)
                 throw ReservationException(responseOccupy.message ?: "예약 API가 응답하지 않습니다.", reservation.seatId)
             else
-                Response.of(true, responseOccupy.message, reservationRepository.save(reservation).toResponseDTO())
+                Response.of(true, responseOccupy.message, null)
         }
+    }
+
+    @Transactional
+    suspend fun saveReservation(requestDTO: ReservationRequestDTO) : ReservationResponseDTO {
+        return reservationRepository.save(requestDTO.toEntity()).toResponseDTO()
     }
 
 }

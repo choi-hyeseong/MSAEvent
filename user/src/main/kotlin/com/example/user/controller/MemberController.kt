@@ -35,8 +35,8 @@ class MemberController(private val memberService: MemberService) {
 
 
     @GetMapping("/exist/{id}")
-    suspend fun existUser(@PathVariable(value = "id") id : Long) : Boolean {
-        return memberService.existById(id)
+    suspend fun existUser(@PathVariable(value = "id") id : Long) : Response<Nothing> {
+        return Response.of(memberService.existById(id), null, null)
     }
 
 }
