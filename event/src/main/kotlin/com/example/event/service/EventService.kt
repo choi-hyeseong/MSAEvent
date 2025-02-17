@@ -1,5 +1,6 @@
 package com.example.event.service
 
+import com.example.event.aop.anno.RedissonLock
 import com.example.event.component.client.user.UserAPIClient
 import com.example.event.component.kafka.producer.KafkaProducer
 import com.example.event.dto.*
@@ -13,6 +14,7 @@ import com.example.response.Response
 import com.example.response.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.redisson.api.RedissonClient
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
@@ -22,8 +24,14 @@ class EventService(
     private val eventRepository: EventRepository,
     private val seatRepository: SeatRepository,
     private val userClient: UserAPIClient,
-    private val kafkaProducer: KafkaProducer
+    private val kafkaProducer: KafkaProducer,
+    private val redissonClient: RedissonClient
 ) {
+
+    companion object {
+        private const val REDIS_TEMPLATE = "Event-{event_id}-{seat_id}"
+        fun getKey(eventId : Long, seatId : Long) = REDIS_TEMPLATE.replace("{event_id}", eventId.toString()).replace("{seat_id}", seatId.toString())
+    }
 
     private val log = logger()
 
@@ -53,8 +61,12 @@ class EventService(
         return seatRepository.findByEventIdAndId(eventId, seatId).getOrNull()
     }
 
-    @Transactional
+    @RedissonLock(value = "ticket_lock")
     suspend fun occupySeat(seatDTO: SeatDTO) : SeatDTO {
+        val seatCache : String? = redissonClient.getBucket<String>(getKey(seatDTO.eventId, seatDTO.seatId)).get()
+        // redis cache가 없는경우 조회
+        if (seatCache != null)
+            throw EventException("예약할 수 없는 좌석입니다. id : ${seatDTO.seatId}", null)
         val seat = findSeatWithEventId(seatDTO.eventId, seatDTO.seatId)
         if (seat == null)
             throw EventException("존재하지 않는 좌석 정보 입니다. id : ${seatDTO.seatId}", null)
@@ -62,6 +74,7 @@ class EventService(
             throw EventException("예약할 수 없는 좌석입니다. id : ${seat.id}", null)
 
         val seatSaveDTO = SeatSaveDTO(seatDTO.eventId, seatDTO.seatId, Status.CLOSE) //Event와 유사한 DTO
+        redissonClient.getBucket<String>(getKey(seatDTO.eventId, seatDTO.seatId)).set("CLOSED") // redis 주입
         kafkaProducer.sendOccupyRequest(seatSaveDTO)
         return seatDTO //delete boolean (check랑 통합)
     }

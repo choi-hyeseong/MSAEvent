@@ -6,6 +6,9 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation(project(":common"))
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.redisson:redisson-spring-boot-starter:3.44.0")
 }
 
 dependencyManagement {

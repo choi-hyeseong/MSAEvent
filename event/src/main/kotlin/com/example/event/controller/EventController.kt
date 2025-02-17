@@ -1,5 +1,6 @@
 package com.example.event.controller
 
+import com.example.event.aop.anno.RedissonLock
 import com.example.event.dto.EventRequestDTO
 import com.example.event.dto.EventResponseDTO
 import com.example.event.dto.SeatDTO
