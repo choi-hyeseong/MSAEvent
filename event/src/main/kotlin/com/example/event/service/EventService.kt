@@ -31,7 +31,7 @@ class EventService(
     suspend fun createEvent(eventRequestDTO: EventRequestDTO) : EventResponseDTO {
         val event = eventRequestDTO.toEntity()
         withContext(Dispatchers.IO) {
-            if (!userClient.existUser(event.ownerId))
+            if (!userClient.existUser(event.ownerId).success)
                 throw EventException("존재하지 않는 유저의 id입니다.", event.ownerId)
         }
         return eventRepository.save(event).toResponseDTO()

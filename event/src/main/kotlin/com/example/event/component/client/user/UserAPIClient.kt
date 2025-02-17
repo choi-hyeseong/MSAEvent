@@ -1,5 +1,6 @@
 package com.example.event.component.client.user
 
+import com.example.event.dto.UserResponseDTO
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -9,5 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable
 interface UserAPIClient {
 
     @GetMapping("/api/user/exist/{id}")
-    fun existUser(@PathVariable id : Long) : Boolean
+    fun existUser(@PathVariable id : Long) : UserResponseDTO
 }
