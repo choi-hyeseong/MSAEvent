@@ -43,4 +43,9 @@ class ReservationService(
         return reservationRepository.save(requestDTO.toEntity()).toResponseDTO()
     }
 
+    @Transactional
+    suspend fun findReservation(userId : Long) : List<ReservationResponseDTO> {
+        return reservationRepository.findAllByUserId(userId).map { it.toResponseDTO() }
+    }
+
 }

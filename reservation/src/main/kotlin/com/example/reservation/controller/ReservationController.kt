@@ -18,8 +18,8 @@ class ReservationController(
 ) {
 
     @GetMapping("/{id}")
-    suspend fun findReservation(@PathVariable id : Long) : Boolean {
-        return true
+    suspend fun findReservation(@PathVariable id : Long) : Response<List<ReservationResponseDTO>> {
+        return Response.of(true, "성공", reservationService.findReservation(id))
     }
 
     @PostMapping
